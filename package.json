@@ -1,0 +1,47 @@
+{
+  "name": "@sogouda/sogouda",
+  "description": "This package is a set of JavaScript/TypeScript bindings for Sogouda",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "bin": {
+    "sogouda": "build/bin/sogouda.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sogouda/node-sogouda.git"
+  },
+  "keywords": [
+    "sogouda",
+    "desktop",
+    "app",
+    "framework",
+    "browser",
+    "web",
+    "ecosystem",
+    "html",
+    "css",
+    "html5",
+    "css3",
+    "javascript",
+    "js",
+    "ecmascript",
+    "es6"
+  ],
+  "author": "Ashlynne Juniper",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/sogouda/node-sogouda/issues"
+  },
+  "homepage": "https://github.com/sogouda/node-sogouda#readme",
+  "dependencies": {
+    "@sogouda/bindings": "^0.1.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "typescript": "^5.4.5"
+  }
+}
