@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # Build output
+bin/
 build/
