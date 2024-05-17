@@ -5,10 +5,31 @@ import {
 
 
 import App from "../App";
+import AppOptions from "../AppOptions";
+import path from "path";
+
+
+const DEFAULT_APP_URL
+    =   "file://"
+    +   path.resolve(
+            path.join(
+                __dirname,
+                "..",
+                "..",
+                "pages"
+            )
+        )
+        .replaceAll(
+            "\\",
+            "/"
+        )
+    +   "/index.html"
+;
 
 
 const PARSE_ARGS_CONFIG: ParseArgsConfig = {
     allowPositionals: true,
+    args: process.argv.splice(2),
     options: {
         "debug": {
             default: false,
@@ -35,7 +56,7 @@ const PARSE_ARGS_CONFIG: ParseArgsConfig = {
             type: "string"
         },
         "url": {
-            default: "https://example.com",
+            default: DEFAULT_APP_URL,
             multiple: false,
             short: "u",
             type: "string"
@@ -60,14 +81,16 @@ type Arguments = {
 
 
 // Parse the arguments.
-const args: Arguments = parseArgs(PARSE_ARGS_CONFIG);
+const args: Arguments = parseArgs(PARSE_ARGS_CONFIG) as Arguments;
 
 
 async function main (
     args: Arguments
 ) {
     // Get the default app options.
-    const options = App.getDefaultOptions();
+    const options: AppOptions = App.getDefaultOptions() as AppOptions;
+
+    options.url = DEFAULT_APP_URL;
 
     if (args.values.debug)
         options.debug = args.values.debug as boolean;
@@ -87,11 +110,8 @@ async function main (
     if (args.values.width)
         options.width = parseInt(args.values.width as string) as number;
 
-    // Create the app.
-    const app = new App(options);
-
     // Start the app.
-    await app.start();
+    new App(options).startSync();
 }
 
 // Run the program.

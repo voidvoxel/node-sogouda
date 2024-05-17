@@ -1,7 +1,12 @@
-import { fork, spawn } from "child_process";
+import StartOptions, * as bindings from "@sogouda/bindings";
 
 
 import AppOptions from "./AppOptions";
+import { tmpdir } from "os";
+import path from "path";
+import { writeFile } from "fs/promises";
+import { fork } from "child_process";
+import { existsSync, mkdirSync, rmSync } from "fs";
 
 
 const DEFAULT_APP_OPTIONS: AppOptions = {
@@ -14,15 +19,108 @@ const DEFAULT_APP_OPTIONS: AppOptions = {
 };
 
 
+function getRandomId () {
+    return (Math.random() * Number.MAX_SAFE_INTEGER);
+}
+
+
+function getRandomIdString () {
+    return getRandomId().toString(16);
+}
+
+
+const SOGOUDA_TMP_DIR = path.resolve(
+    path.join(
+        tmpdir(),
+        "sogouda",
+        getRandomIdString()
+    )
+);
+
+
+function cleanup () {
+    if (existsSync(SOGOUDA_TMP_DIR)) {
+        rmSync(SOGOUDA_TMP_DIR);
+    }
+}
+
+
+mkdirSync(
+    SOGOUDA_TMP_DIR,
+    {
+        recursive: true
+    }
+);
+
+process.on(
+    "error",
+    cleanup
+);
+
+process.on(
+    "exit",
+    cleanup
+);
+
+
+/**
+ * A Sogouda app.
+ *
+ * For more information, please refer to [the README](https://github.com/sogouda/node-sogouda/).
+ */
 export default class App {
+    /**
+     * Whether or not to enable debug mode.
+     *
+     * @type {boolean}
+     */
     debug: boolean
+
+    /**
+     * The height of the window.
+     *
+     * @type {number}
+     */
     height: number
+
+    /**
+     * Whether or not the window is frameless.
+     *
+     * @type {boolean}
+     */
     frameless: boolean
+
+    /**
+     * The title of the window.
+     *
+     * @type {string}
+     */
     title: string
+
+    /**
+     * The URL where the `App`'s data is located.
+     *
+     * @type {string}
+     */
     url: string
+
+    /**
+     * The width of the window.
+     *
+     * @type {number}
+     */
     width: number
 
 
+    /**
+     * Get the default options.
+     *
+     * @public
+     * @since v0.1.0
+     * @version 0.1.0
+     *
+     * @returns {AppOptions}
+     */
     static getDefaultOptions (): AppOptions {
         return structuredClone(DEFAULT_APP_OPTIONS);
     }
@@ -43,52 +141,48 @@ export default class App {
     }
 
 
+    /**
+     * Start the app.
+     *
+     * @async
+     *
+     * @public
+     * @since v0.1.0
+     * @version 0.1.0
+     *
+     * @returns {Promise<void>}
+     */
     async start () {
-        const subprocess = this.#startSubprocess();
-
-        const promise: Promise<void> = new Promise(
+        return new Promise<void>(
             (resolve, reject) => {
-                subprocess.on(
-                    "error",
-                    error => reject(error.message)
-                );
+                try {
+                    this.startSync();
+                } catch (error) {
+                    reject(error.message);
+                }
 
-                const errorMessage = (exitCode: number): string =>
-                    "Sogouda Error #" + exitCode.toString()
-                ;
-
-                subprocess.on(
-                    "exit",
-                    exitCode =>
-                        exitCode === 0
-                            ?   resolve(undefined)
-                            :   (
-                                () => {
-                                    // Make an exception for this safe exit code.
-                                    if (exitCode === 3221226356) {
-                                        resolve(undefined);
-                                    }
-
-                                    reject(errorMessage(exitCode));
-                                }
-                            )()
-                );
+                resolve(undefined);
             }
-        );
-
-        return promise;
+        )
     }
 
 
+    /**
+     * Start the app.
+     *
+     * @public
+     * @since v0.1.0
+     * @version 0.1.0
+     *
+     * @returns {ChildProcessWithoutNullStreams}
+     */
     startSync () {
-        const subprocess = this.#startSubprocess();
-
-        return subprocess;
+        bindings.start(this.#getOptions());
     }
 
 
-    #startSubprocess () {
-        const options: AppOptions = {
+    #getOptions (): StartOptions {
+        return {
             debug: this.debug,
             frameless: this.frameless,
             height: this.height,
@@ -96,37 +190,5 @@ export default class App {
             url: this.url,
             width: this.width
         };
-
-        let subprocess = spawn(
-            "node",
-            [
-                "build/scripts/start.js",
-                JSON.stringify(options)
-            ]
-        );
-
-        process.on(
-            "error",
-            () => {
-                if (subprocess) {
-                    subprocess.kill();
-
-                    subprocess = null;
-                }
-            }
-        );
-
-        process.on(
-            "exit",
-            () => {
-                if (subprocess) {
-                    subprocess.kill();
-
-                    subprocess = null;
-                }
-            }
-        );
-
-        return subprocess;
     }
 }

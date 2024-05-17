@@ -1,0 +1,16 @@
+# Directories
+
+## Absolute
+.git/
+node_modules/
+src/
+
+# Files
+
+## Absolute
+.gitattributes
+.gitignore
+.npmignore
+
+## Wildcards
+*tsconfig.json

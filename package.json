@@ -1,8 +1,9 @@
 {
-  "name": "@sogouda/sogouda",
-  "description": "This package is a set of JavaScript/TypeScript bindings for Sogouda",
+  "name": "sogouda",
+  "description": "This package is a set of JavaScript/TypeScript bindings for SoGouda",
   "version": "0.0.0",
-  "main": "dist/index.js",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "bin": {
     "sogouda": "build/bin/sogouda.js"
   },

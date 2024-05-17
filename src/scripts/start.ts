@@ -1,19 +1,11 @@
-import * as bindings from "@sogouda/bindings";
-
-
-import AppOptions from "../AppOptions";
-import { writeFileSync } from "fs";
+import StartOptions, * as bindings from "@sogouda/bindings";
 
 
 // Get the script arguments.
 const args = process.argv.splice(2);
 
-
-writeFileSync("debug.json", JSON.stringify(JSON.parse(args[0])), "utf-8");
-
-
 // Set the default app options.
-const DEFAULT_APP_OPTIONS: AppOptions = {
+const DEFAULT_APP_OPTIONS: StartOptions = {
     debug: false,
     frameless: false,
     height: 480,
@@ -23,7 +15,7 @@ const DEFAULT_APP_OPTIONS: AppOptions = {
 };
 
 // Start with the default options.
-let options: AppOptions = structuredClone(DEFAULT_APP_OPTIONS);
+let options: StartOptions = structuredClone(DEFAULT_APP_OPTIONS);
 
 // If the optional script arguments are present, apply them.
 if (args.length >= 1) {
@@ -44,8 +36,6 @@ options.height ??= 480;
 options.title ??= "Sogouda";
 options.url ??= "https://example.com";
 options.width ??= 640;
-
-console.log(options);
 
 // Start the app.
 bindings.start(options);
