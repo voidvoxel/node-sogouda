@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/sogouda/node-sogouda#readme",
   "dependencies": {
-    "@sogouda/bindings": "^0.1.3"
+    "@sogouda/bindings": "^0.1.4"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
