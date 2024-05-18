@@ -1,12 +1,12 @@
+import { existsSync, mkdirSync, rmSync } from "fs";
+import { tmpdir } from "os";
+import path from "path";
+
+
 import StartOptions, * as bindings from "@sogouda/bindings";
 
 
 import AppOptions from "./AppOptions";
-import { tmpdir } from "os";
-import path from "path";
-import { writeFile } from "fs/promises";
-import { fork } from "child_process";
-import { existsSync, mkdirSync, rmSync } from "fs";
 
 
 const DEFAULT_APP_OPTIONS: AppOptions = {
