@@ -1,6 +1,6 @@
 {
   "name": "sogouda",
-  "description": "This package is a set of JavaScript/TypeScript bindings for SoGouda",
+  "description": "This package is a set of JavaScript/TypeScript bindings for Sogouda",
   "version": "0.1.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
