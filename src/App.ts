@@ -40,7 +40,13 @@ const SOGOUDA_TMP_DIR = path.resolve(
 
 function cleanup () {
     if (existsSync(SOGOUDA_TMP_DIR)) {
-        rmSync(SOGOUDA_TMP_DIR);
+        rmSync(
+            SOGOUDA_TMP_DIR,
+            {
+                force: true,
+                recursive: true
+            }
+        );
     }
 }
 
